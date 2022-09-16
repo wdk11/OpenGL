@@ -4,6 +4,12 @@
 
 ## 环境配置与搭建
 
+### git管理代码
+
+https://blog.csdn.net/shulianghan/article/details/114926281
+
+https://greambwang.blog.csdn.net/article/details/118345307?spm=1001.2101.3001.6650.5&utm_medium=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-5-118345307-blog-114926281.pc_relevant_multi_platform_featuressortv2dupreplace&depth_1-utm_source=distribute.pc_relevant.none-task-blog-2%7Edefault%7EBlogCommendFromBaidu%7ERate-5-118345307-blog-114926281.pc_relevant_multi_platform_featuressortv2dupreplace&utm_relevant_index=6
+
 ### ctrl+shift+space
 
 ### 创建一个空项目取名OpenGL
