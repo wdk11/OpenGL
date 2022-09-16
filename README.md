@@ -316,7 +316,25 @@ https://github.com/g-truc/glm
 
 相乘记得是PVM的顺序
 
+
+
 ![image-20220917021757621](README.assets/image-20220917021757621.png)
+
+## ImGui
+
+https://github.com/ocornut/imgui
+
+![image-20220917025709229](README.assets/image-20220917025709229.png)
+
+将这几个文件放置vendor文件夹里的imgui文件夹里，然后把例子也加进去![image-20220917025746918](README.assets/image-20220917025746918.png)
+
+注意最后要把main.cpp移除
+
+![image-20220917025816466](README.assets/image-20220917025816466.png)
+
+以及该头文件改为glew.h
+
+然后再ctrl+f7进行编译
 
 # VA(visual assist番茄助手的安装)
 
