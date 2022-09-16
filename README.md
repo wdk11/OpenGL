@@ -312,6 +312,12 @@ https://github.com/g-truc/glm
 
 ![image-20220915211027849](README.assets/image-20220915211027849.png)
 
+### 投影矩阵，视角矩阵，模型矩阵
+
+相乘记得是PVM的顺序
+
+![image-20220917021757621](README.assets/image-20220917021757621.png)
+
 # VA(visual assist番茄助手的安装)
 
 ## 安装番茄助手（安装之前关闭VS2019)
