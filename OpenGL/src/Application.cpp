@@ -15,7 +15,7 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 #include "imgui/imgui.h"
-
+#include "imgui/imgui_impl_glfw_gl3.h"
 
 int main()
 {
@@ -82,11 +82,11 @@ int main()
 		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
         //创建一个视图矩阵
         glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 0, 0));
-        //模型矩阵
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200.0f, 200.0f, 0));
-        glm::mat4 mvp = proj * view * model;
+        ////模型矩阵
+        //glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200.0f, 200.0f, 0));
+        //glm::mat4 mvp = proj * view * model;
         shader.Bind();
-        shader.SetUniformMat4f("u_MVP", mvp);
+        //shader.SetUniformMat4f("u_MVP", mvp);
         //shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
 
 		Texture texture("res/texture/ChernoLogo.png");
@@ -99,9 +99,16 @@ int main()
         shader.Unbind();
 
         Renderer renderer;
+        //创建imgui的上下文并初始化
+        ImGui::CreateContext();
 
 
 
+        ImGui_ImplGlfwGL3_Init(window, true);
+        ImGui::StyleColorsDark();
+
+
+        glm::vec3 translation(200.0f, 200.0f, 0);
         float r = 0.0f;
         float increment = 0.05f;
         /* Loop until the user closes the window */
@@ -109,6 +116,16 @@ int main()
         {
             /* Render here */
             renderer.Clear();
+
+            ImGui_ImplGlfwGL3_NewFrame();
+
+			//模型矩阵
+			glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
+            glm::mat4 mvp = proj * view * model;
+
+            shader.Bind();
+            shader.SetUniformMat4f("u_MVP", mvp);
+
             //重新绑定
             renderer.Draw(va, ib, shader);
 
@@ -123,6 +140,15 @@ int main()
                 increment = 0.05f;
             }
             r += increment;
+
+			{
+                // Display some text (you can use a format string too)
+				ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);//  
+				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
+			}
+
+			ImGui::Render();
+			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
             /* Swap front and back buffers */
             glfwSwapBuffers(window);
 
@@ -130,6 +156,8 @@ int main()
             glfwPollEvents();
         }
     }
+	ImGui_ImplGlfwGL3_Shutdown();
+	ImGui::DestroyContext();
     glfwTerminate();
     return 0;
 } 
