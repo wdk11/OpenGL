@@ -16,6 +16,8 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw_gl3.h"
+#include "tests/TestClearColor.h"
+
 
 int main()
 {
@@ -49,104 +51,30 @@ int main()
     }
     std::cout << glGetString(GL_VERSION) << std::endl;
     {
-        float positions[] = {
-            100.0f, 100.0f, 0.0f, 0.0f,//0
-            200.0f, 100.0f, 1.0f, 0.0f,//1
-            200.0f, 200.0f, 1.0f, 1.0f,//2
-            100.0f, 200.0f, 0.0f, 1.0f//3
-        };
-
-        unsigned int indices[] =
-        {
-            0,1,2,
-            2,3,0
-        };
-
         GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
         GLCall(glEnable(GL_BLEND));
-        //创建一个顶点数组并绑定
-        VertexArray va;
-
-        //创建一个顶点缓冲区
-        VertexBuffer vb(positions, sizeof(positions));
-        VertexBufferLayout layout;
-        layout.Push<float>(2);
-        layout.Push<float>(2);
-        va.AddBuffer(vb, layout);
-        //将索引缓冲放入GPU
-        IndexBuffer ib(indices, 6);
-        //将索引缓冲放入GPU
-        const std::string& filepath = "res/shaders/Basic.shader";
-        Shader shader(filepath);//一放进去，构造函数就已经启用了
-		//创建投影矩阵
-		glm::mat4 proj = glm::ortho(0.0f, 960.0f, 0.0f, 540.0f, -1.0f, 1.0f);
-        //创建一个视图矩阵
-        glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(-100.0f, 0, 0));
-        ////模型矩阵
-        //glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(200.0f, 200.0f, 0));
-        //glm::mat4 mvp = proj * view * model;
-        shader.Bind();
-        //shader.SetUniformMat4f("u_MVP", mvp);
-        //shader.SetUniform4f("u_Color", 0.8f, 0.3f, 0.8f, 1.0f);
-
-		Texture texture("res/texture/ChernoLogo.png");
-		texture.Bind();
-		shader.SetUniform1i("u_Texture", 0);//插槽
-        //解绑
-        va.Unbind();
-        vb.Unbind();
-        ib.Unbind();
-        shader.Unbind();
 
         Renderer renderer;
         //创建imgui的上下文并初始化
         ImGui::CreateContext();
-
-
-
         ImGui_ImplGlfwGL3_Init(window, true);
         ImGui::StyleColorsDark();
+        test::Test* current;
+        test::TestClearColor test;
 
 
-        glm::vec3 translation(200.0f, 200.0f, 0);
-        float r = 0.0f;
-        float increment = 0.05f;
+
         /* Loop until the user closes the window */
         while (!glfwWindowShouldClose(window))
         {
             /* Render here */
             renderer.Clear();
 
+            test.OnUpdate(0.0f);
+            test.OnRender();
+
             ImGui_ImplGlfwGL3_NewFrame();
-
-			//模型矩阵
-			glm::mat4 model = glm::translate(glm::mat4(1.0f), translation);
-            glm::mat4 mvp = proj * view * model;
-
-            shader.Bind();
-            shader.SetUniformMat4f("u_MVP", mvp);
-
-            //重新绑定
-            renderer.Draw(va, ib, shader);
-
-            //使颜色开始变换
-            shader.SetUniform4f("u_Color", r, 0.3f, 0.8f, 1.0f);
-            if (r > 1.0f)
-            {
-                increment = -0.05f;
-            }
-            else if (r < 0.0f)
-            {
-                increment = 0.05f;
-            }
-            r += increment;
-
-			{
-                // Display some text (you can use a format string too)
-				ImGui::SliderFloat3("Translation", &translation.x, 0.0f, 960.0f);//  
-				ImGui::Text("Application average %.3f ms/frame (%.1f FPS)", 1000.0f / ImGui::GetIO().Framerate, ImGui::GetIO().Framerate);
-			}
-
+            test.OnImGuiRender();
 			ImGui::Render();
 			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());
             /* Swap front and back buffers */
