@@ -59,7 +59,12 @@ int main()
         ImGui::CreateContext();
         ImGui_ImplGlfwGL3_Init(window, true);
         ImGui::StyleColorsDark();
-        test::Test* current;
+        test::Test* currentTest = nullptr;
+        test::TestMenu* testMenu = new test::TestMenu(currentTest);
+        currentTest = testMenu;
+
+        TestMenu->RegisterTest<test::TestClearColor>("Clear Color");
+
         test::TestClearColor test;
 
 
@@ -74,6 +79,19 @@ int main()
             test.OnRender();
 
             ImGui_ImplGlfwGL3_NewFrame();
+            if (currentTest)
+            {
+                currentTest->OnUpdate(0.0f);
+                currentTest->OnRender();
+                ImGui::Begin("Test");
+                if (currentTest != testMenu && ImGui::Button("<-"))//如果现在的test不等于并且返回按钮按下了
+                {
+                    delete currentTest;
+                    currentTest = testMenu;
+                }
+                currentTest->OnImGuiRender();
+                ImGui::End();
+            }
             test.OnImGuiRender();
 			ImGui::Render();
 			ImGui_ImplGlfwGL3_RenderDrawData(ImGui::GetDrawData());

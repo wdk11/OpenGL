@@ -20,7 +20,6 @@ namespace test {
 	{
 	public:
 		TestMenu(Test*& currentTestPointer);
-		~TestMenu();
 
 		void OnImGuiRender() override;//IMGUI放置的地方
 	private:
